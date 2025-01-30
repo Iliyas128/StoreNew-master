@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Email Verification</h2>
+  <p>Please check your email and enter the code below to verify your account.</p>
+  <input type="text" id="verificationCode" placeholder="Enter verification code" />
+  <button onclick="submitVerificationCode()">Verify</button>
+  <div id="message"></div>
+</div>
+
+<script>
+  function submitVerificationCode() {
+    const code = document.getElementById('verificationCode').value;
+
+    fetch('/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    })
+            .then((response) => {
+              const messageDiv = document.getElementById('message');
+              if (response.ok) {
+                messageDiv.innerText = 'Email successfully verified!';
+                messageDiv.style.color = 'green';
+
+                // Перенаправляем пользователя на главную страницу
+                setTimeout(() => {
+                  window.location.href = '/';
+                }, 2000);
+              } else {
+                messageDiv.innerText = 'Failed to verify email. Try again.';
+                messageDiv.style.color = 'red';
+              }
+            });
+  }
+</script>
+</body>
+</html>

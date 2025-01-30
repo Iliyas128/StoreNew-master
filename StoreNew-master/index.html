@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cigarette Shop</title>
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+<div class="container">
+
+  {{if .LoggedIn}}
+  <!-- Если пользователь авторизован -->
+  <div class="user-info">
+    <span>Welcome, {{.Username}}</span>
+    <button onclick="window.location.href='/logout'" class="primary-button">Logout</button>
+    {{if eq .Email "d4mirk@gmail.com"}}
+    <button onclick="window.location.href='/admin'" class="primary-button">Admin</button>
+    {{end}}
+  </div>
+  {{else}}
+  <!-- Если пользователь не авторизован -->
+  <button type="button" class="secondary" onclick="window.location.href = '/register'">Register</button>
+  <button type="button" class="secondary" onclick="window.location.href = '/login'">Login</button>
+  {{end}}
+
+  <h1 class="gradient-title">Cigarette <span>Shop</span></h1>
+
+  <div class="tabs">
+    <button class="tab-button active" onclick="openTab('catalogTab')">Catalog</button>
+    <button class="tab-button" onclick="openTab('cartTab')">Cart</button>
+    {{if .LoggedIn}}
+    <button class="tab-button" onclick="openTab('profileTab')">Profile</button>
+    {{else}}
+    {{end}}
+    <button class="tab-button" onclick="openTab('otherTab')">Other</button>
+  </div>
+
+  <div id="catalogTab" class="tab-content active">
+    <div class="catalog-header">
+      <h2>Our Products</h2>
+      <p>Explore the variety of products and filter them to find exactly what you need!</p>
+    </div>
+
+    <div class="filters">
+      <input type="text" id="filterBrand" placeholder="Search by brand" class="input-field">
+      <select id="sortField" class="input-field">
+        <option value="">Sort By</option>
+        <option value="brand">Brand</option>
+        <option value="price">Price</option>
+      </select>
+      <select id="sortOrder" class="input-field">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+      <button onclick="fetchFilteredProducts()" class="primary-button">Apply Filters</button>
+    </div>
+
+    <div id="products" class="products-grid">
+    </div>
+    <div class="pagination">
+      <button id="prevPage" onclick="changePage(-1)" class="primary-button">← Previous</button>
+      <span id="currentPage">1</span>
+      <button id="nextPage" onclick="changePage(1)" class="primary-button">Next →</button>
+    </div>
+  </div>
+
+  <div id="cartTab" class="tab-content">
+    <h2>Your Cart</h2>
+    <div id="cart"></div>
+    <button id="clearCartBtn" onclick="clearCart()" class="danger-button">Clear Cart</button>
+    <div class="cart-email">
+      <h2>Send Cart to Your Email</h2>
+      <button onclick="sendCartToUserEmail()" class="primary-button">Send</button>
+      <div id="cartResult"></div>
+    </div>
+
+  </div>
+
+  <div id="profileTab" class="tab-content">
+    <h2>Your Profile</h2>
+    <p>Username: {{.Username}}</p>
+    <p>Email: {{.Email}}</p>
+    <h2>Change Password</h2>
+    <input type="text" id="changeUsername" placeholder="Enter username" class="input-field">
+    <input type="password" id="changeOldPassword" placeholder="Enter old password" class="input-field">
+    <input type="password" id="changeNewPassword" placeholder="Enter new password" class="input-field">
+    <button onclick="changePassword()" class="primary-button">Change</button>
+    <div id="changePasswordResult"></div>
+    <button onclick="window.location.href='/logout'" class="danger-button">Logout</button>
+  </div>
+
+  <div id="otherTab" class="tab-content">
+    <h2>Upload Photo</h2>
+    <form id="photoUploadForm" enctype="multipart/form-data" onsubmit="uploadPhoto(event)">
+      <input type="text" name="brand" placeholder="Cigarette Brand" class="input-field">
+      <input type="file" name="photo" accept="image/*" class="input-field">
+      <button type="submit" class="primary-button">Upload</button>
+    </form>
+    <div id="uploadResult"></div>
+
+    <h2>Search Cigarette</h2>
+    <input type="text" id="searchBrand" placeholder="Enter brand name" class="input-field">
+    <button onclick="searchByBrand()" class="primary-button">Search</button>
+    <div id="searchResult"></div>
+
+    <h2>Update Price</h2>
+    <input type="text" id="updateBrand" placeholder="Enter brand" class="input-field">
+    <input type="number" id="updatePrice" placeholder="Enter new price" class="input-field">
+    <button onclick="updatePrice()" class="primary-button">Update</button>
+    <div id="updateResult"></div>
+
+  </div>
+</div>
+
+<script src="static/script.js"></script>
+</body>
+</html>
